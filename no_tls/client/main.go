@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "github.com/jergoo/go-grpc-example/proto/hello_http" // 引入proto包
+	pb "go-grpc-test/proto/hello_http" // 引入proto包
 
 	"fmt"
 	"golang.org/x/net/context"

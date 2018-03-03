@@ -32,8 +32,10 @@ func request_HelloHTTP_SayHello_0(ctx context.Context, marshaler runtime.Marshal
 	var protoReq HelloHTTPRequest
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	if req.ContentLength > 0 {
+		if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil {
+			return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+		}
 	}
 
 	msg, err := client.SayHello(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -69,10 +71,18 @@ func RegisterHelloHTTPHandlerFromEndpoint(ctx context.Context, mux *runtime.Serv
 // RegisterHelloHTTPHandler registers the http handlers for service HelloHTTP to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
 func RegisterHelloHTTPHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	client := NewHelloHTTPClient(conn)
+	return RegisterHelloHTTPHandlerClient(ctx, mux, NewHelloHTTPClient(conn))
+}
+
+// RegisterHelloHTTPHandler registers the http handlers for service HelloHTTP to "mux".
+// The handlers forward requests to the grpc endpoint over the given implementation of "HelloHTTPClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "HelloHTTPClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "HelloHTTPClient" to call the correct interceptors.
+func RegisterHelloHTTPHandlerClient(ctx context.Context, mux *runtime.ServeMux, client HelloHTTPClient) error {
 
 	mux.Handle("POST", pattern_HelloHTTP_SayHello_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(ctx)
+		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		if cn, ok := w.(http.CloseNotifier); ok {
 			go func(done <-chan struct{}, closed <-chan bool) {

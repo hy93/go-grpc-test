@@ -7,13 +7,14 @@ import (
 	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	pb "github.com/jergoo/go-grpc-example/proto/hello_http"
+	pb "go-grpc-test/proto/hello_http"
 	"golang.org/x/net/context"
 	"golang.org/x/net/http2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 	"io/ioutil"
+	"fmt"
 )
 
 const (
@@ -72,7 +73,7 @@ func main() {
 		TLSConfig: getTLSConfig(),
 	}
 
-	grpclog.Infof("gRPC and https listen on: %s\n", endpoint)
+	fmt.Printf("gRPC and https listen on: %s\n", endpoint)
 
 	if err = srv.Serve(tls.NewListener(conn, srv.TLSConfig)); err != nil {
 		grpclog.Fatal("ListenAndServe: ", err)

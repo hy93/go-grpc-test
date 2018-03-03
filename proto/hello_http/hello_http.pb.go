@@ -16,7 +16,7 @@ package hello_http
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import _ "github.com/jergoo/go-grpc-example/proto/google/api"
+import _ "go-grpc-test/proto/google/api"
 
 import (
 	context "golang.org/x/net/context"

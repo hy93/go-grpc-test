@@ -6,14 +6,13 @@ import (
 	"strings"
 
 	"fmt"
-	//"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	pb "github.com/jergoo/go-grpc-example/proto/hello_http"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	pb "go-grpc-test/proto/hello_http"
 	"golang.org/x/net/context"
 	"golang.org/x/net/http2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 	"time"
-	"encoding/json"
 )
 
 // 定义helloHTTPService并实现约定的接口
@@ -39,34 +38,20 @@ func main() {
 	defer conn.Close()
 
 	// grpc server
-	if err != nil {
-		grpclog.Fatalf("Failed to create server TLS credentials %v", err)
-	}
 	grpcServer := grpc.NewServer()
 	pb.RegisterHelloHTTPServer(grpcServer, HelloHTTPService)
 
 	// gateway server
-	//ctx := context.Background()
-	//if err != nil {
-	//	grpclog.Fatalf("Failed to create client TLS credentials %v", err)
-	//}
-	//dopts := []grpc.DialOption{grpc.WithInsecure()}
-	//gwmux := runtime.NewServeMux()
-	//if err = pb.RegisterHelloHTTPHandlerFromEndpoint(ctx, gwmux, endpoint, dopts); err != nil {
-	//	grpclog.Fatalf("Failed to register gw server: %v\n", err)
-	//}
+	ctx := context.Background()
+	dopts := []grpc.DialOption{grpc.WithInsecure()}
+	gwmux := runtime.NewServeMux()
+	if err = pb.RegisterHelloHTTPHandlerFromEndpoint(ctx, gwmux, endpoint, dopts); err != nil {
+		grpclog.Fatalf("Failed to register gw server: %v\n", err)
+	}
 
 	// http服务
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		s := struct {
-			msg string
-		}{
-			msg: "test",
-		}
-		b, _ := json.Marshal(s)
-		w.Write(b)
-	})
+	mux.Handle("/",gwmux)
 
 	srv := &http.Server{
 		Addr:    endpoint,
