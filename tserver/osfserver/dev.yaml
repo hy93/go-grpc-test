@@ -1,0 +1,10 @@
+appName: example
+owner: hanying@ofo.com
+limitQPS: 0 # QPS上限，大于0时有效
+loglevel: debug  # debug, info, warn, error, fatal, panic
+logLineLevel: panic,fatal,error # 在日志中打印出文件名和行号，**耗时增加约2.7倍**
+registry_addr: 10.6.26.184:2181 # 注册中心地址，逗号分隔。可为空。
+monitorLog:
+  mysqlThreshold: 0 # 单位ms，大于等于此值会在monitor日志中记录，默认100
+  redisThreshold: 0 # 单位ms，大于等于此值会在monitor日志中记录，默认20
+  httpThreshold: 0  # 单位ms，大于等于此值会在monitor日志中记录，默认100
