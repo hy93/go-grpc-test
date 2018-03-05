@@ -18,8 +18,8 @@ import (
 )
 
 const (
-	TLSKEY = "/Users/xinyuanjieku/go/src/github.com/jergoo/go-grpc-example/keys/server.key"
-	TLSPEM = "/Users/xinyuanjieku/go/src/github.com/jergoo/go-grpc-example/keys/server.pem"
+	TLSKEY = "../../keys/server.key"
+	TLSPEM = "../../keys/server.pem"
 )
 
 // 定义helloHTTPService并实现约定的接口

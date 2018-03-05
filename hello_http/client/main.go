@@ -17,7 +17,7 @@ const (
 
 func main() {
 	// TLS连接
-	creds, err := credentials.NewClientTLSFromFile("/Users/xinyuanjieku/go/src/github.com/jergoo/go-grpc-example/keys/server.pem", "hanying")
+	creds, err := credentials.NewClientTLSFromFile("../../keys/server.pem", "hanying")
 	if err != nil {
 		grpclog.Fatalf("Failed to create TLS credentials %v", err)
 	}
