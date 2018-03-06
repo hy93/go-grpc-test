@@ -1,15 +1,15 @@
 package main
 
 import (
-	pb "go-grpc-test/proto/tserver"
-	"context"
 	"fmt"
+	"context"
+	pb "go-grpc-test/proto/tserver"
 	"ofordcode.ofo.so/baseservice/osf-go.git"
 )
 
-type Hi struct { }
+type Hi struct{}
 
-func (h Hi) SayHello(ctx context.Context, req *pb.Request) (*pb.Response, error){
+func (h Hi) Hello(ctx context.Context, req *pb.Request) (*pb.Response, error) {
 	msg := fmt.Sprintf("Hello, %s", req.Name)
 
 	return &pb.Response{
@@ -18,12 +18,12 @@ func (h Hi) SayHello(ctx context.Context, req *pb.Request) (*pb.Response, error)
 	return nil, nil
 }
 
-func main(){
+func main() {
 	helloService := osf.ServiceConf{
-		Name : "ofo.hello.HY.hiService",
-		Register:pb.RegisterHiServer,
-		Server : Hi{},
-		NoRegistration:true,
+		Name:     "ofo.hello.HY.hiService",
+		Register:   pb.RegisterHiServer,
+		Server:   Hi{},
+		//NoRegistration:true,
 	}
-	osf.NewServer().Register(helloService).Start(8888)
+	osf.NewServer().Register(helloService).Start(10005)
 }
